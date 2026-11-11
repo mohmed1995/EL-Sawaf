@@ -9,6 +9,7 @@ import { PettyCashModal } from '../components/PettyCashModal.js';
 import { TailorLedgerModal } from '../components/TailorLedgerModal.js';
 import { SizingWizardModal } from '../components/SizingWizardModal.js';
 import { DailyInvoicesModal } from '../components/DailyInvoicesModal.js';
+import { AdminDashboardModal } from '../components/AdminDashboardModal.js';
 
 const CATEGORIES = [
   { id: 'ALL', label: 'كل الأقمشة' },
@@ -59,6 +60,7 @@ export default function DemoApp() {
   const [showTailors, setShowTailors] = useState(false);
   const [showSizing, setShowSizing] = useState(false);
   const [showDailyInvoices, setShowDailyInvoices] = useState(false);
+  const [showAdmin, setShowAdmin] = useState(false);
 
   // مراجع عناصر الإدخال للاختصارات السريعة
   const searchInputRef = useRef<HTMLInputElement>(null);
@@ -221,6 +223,9 @@ export default function DemoApp() {
       } else if (e.key === 'F4') {
         e.preventDefault();
         setShowBridal(true);
+      } else if (e.key === 'F7') {
+        e.preventDefault();
+        setShowAdmin(true);
       } else if (e.key === 'F8') {
         e.preventDefault();
         setShowDailyInvoices(true);
@@ -234,7 +239,8 @@ export default function DemoApp() {
         e.preventDefault();
         pay('cash');
       } else if (e.key === 'Escape') {
-        if (showBridal) setShowBridal(false);
+        if (showAdmin) setShowAdmin(false);
+        else if (showBridal) setShowBridal(false);
         else if (showPettyCash) setShowPettyCash(false);
         else if (showTailors) setShowTailors(false);
         else if (showSizing) setShowSizing(false);
@@ -280,6 +286,9 @@ export default function DemoApp() {
         </div>
 
         <div className="header-actions">
+          <button onClick={() => setShowAdmin(true)} className="nav-pill-btn gold">
+            👑 لوحة الإدارة [F7]
+          </button>
           <button onClick={() => setShowDailyInvoices(true)} className="nav-pill-btn">
             📋 فواتير اليوم [F8]
           </button>
@@ -722,6 +731,9 @@ export default function DemoApp() {
         <div className="hotkey-tag" onClick={() => setShowBridal(true)}>
           <kbd>F4</kbd> <span>جهاز عروسة</span>
         </div>
+        <div className="hotkey-tag" onClick={() => setShowAdmin(true)}>
+          <kbd>F7</kbd> <span>لوحة الإدارة</span>
+        </div>
         <div className="hotkey-tag" onClick={() => setShowDailyInvoices(true)}>
           <kbd>F8</kbd> <span>فواتير اليوم</span>
         </div>
@@ -745,6 +757,7 @@ export default function DemoApp() {
       </footer>
 
       {/* النوافذ المنبثقة الفاخرة */}
+      {showAdmin && <AdminDashboardModal onClose={() => setShowAdmin(false)} onRefreshPOS={refresh} />}
       {showBridal && <BridalDossierModal onClose={() => setShowBridal(false)} />}
       {showPettyCash && <PettyCashModal currentCashInDrawer={total} onClose={() => setShowPettyCash(false)} />}
       {showTailors && <TailorLedgerModal onClose={() => setShowTailors(false)} />}

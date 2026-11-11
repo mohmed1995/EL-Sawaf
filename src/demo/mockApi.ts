@@ -52,16 +52,117 @@ const save = () => localStorage.setItem(KEY, JSON.stringify(db));
 const wait = <T>(v: T) => new Promise<T>((r) => setTimeout(() => r(structuredClone(v)), 60));
 
 export const api = {
-  products: { list: () => wait(db.products) },
-  customers: { list: () => wait(db.customers) },
+  products: {
+    list: () => wait(db.products),
+    async create(p: Omit<Product, 'id'>) {
+      const id = 'p' + (db.products.length + 1);
+      const newProd: Product = { ...p, id };
+      db.products.push(newProd);
+      save();
+      return wait(newProd);
+    },
+    async addRoll(productId: string, meters: number, dyeLot = 'صبغة قياسية') {
+      const prod = db.products.find((p) => p.id === productId);
+      if (!prod) throw new Error('الصنف غير موجود');
+      const nextNum = Math.floor(Math.random() * 800) + 100;
+      const rollId = `T-${nextNum}`;
+      prod.rolls.push({ id: rollId, meters, dyeLot });
+      save();
+      return wait(prod);
+    },
+    async updateStock(productId: string, rollId: string, newMeters: number) {
+      const prod = db.products.find((p) => p.id === productId);
+      const roll = prod?.rolls.find((r) => r.id === rollId);
+      if (!roll) throw new Error('التوب غير موجود');
+      roll.meters = Math.max(0, Math.round(newMeters * 100) / 100);
+      save();
+      return wait(roll);
+    }
+  },
+  customers: {
+    list: () => wait(db.customers),
+    async create(c: Omit<Customer, 'id' | 'balance'>) {
+      const id = 'c' + (db.customers.length + 1);
+      const newCust: Customer = { ...c, id, balance: 0 };
+      db.customers.push(newCust);
+      save();
+      return wait(newCust);
+    },
+    async recordPayment(customerId: string, amount: number) {
+      const cust = db.customers.find((c) => c.id === customerId);
+      if (!cust) throw new Error('العميل غير موجود');
+      if (amount <= 0) throw new Error('المبلغ يجب أن يكون أكبر من صفر');
+      cust.balance = Math.max(0, Math.round((cust.balance - amount) * 100) / 100);
+      save();
+      return wait(cust);
+    },
+    async updateLimit(customerId: string, newLimit: number) {
+      const cust = db.customers.find((c) => c.id === customerId);
+      if (!cust) throw new Error('العميل غير موجود');
+      cust.limit = Math.max(0, newLimit);
+      save();
+      return wait(cust);
+    }
+  },
   tailors: { list: () => wait(TAILORS) },
   bolts: {
     list: () =>
       wait(
         db.products.flatMap((p) =>
-          p.rolls.map((r) => ({ id: r.id, productId: p.id, meters: r.meters }))
+          p.rolls.map((r) => ({
+            id: r.id,
+            productId: p.id,
+            productName: p.name,
+            meters: r.meters,
+            dyeLot: r.dyeLot || 'صبغة أصلية',
+            pricePerMeter: p.pricePerMeter,
+            widthCm: p.widthCm
+          }))
         )
       )
+  },
+  reports: {
+    async getSummary() {
+      const invs = db.invoices;
+      const activeInvs = invs.filter((i) => i.status === 'ACTIVE');
+      const totalSales = activeInvs.reduce((s, i) => s + i.total, 0);
+      const cashSales = activeInvs.filter((i) => i.payment === 'cash').reduce((s, i) => s + i.total, 0);
+      const creditSales = activeInvs.filter((i) => i.payment === 'credit').reduce((s, i) => s + i.total, 0);
+      const totalMeters = activeInvs.flatMap((i) => i.lines).reduce((s, l) => s + l.meters, 0);
+      const totalOutstandingDebt = db.customers.reduce((s, c) => s + c.balance, 0);
+      const totalBolts = db.products.reduce((s, p) => s + p.rolls.length, 0);
+      const totalInventoryMeters = db.products.flatMap((p) => p.rolls).reduce((s, r) => s + r.meters, 0);
+      const remnantBolts = db.products.flatMap((p) => p.rolls).filter((r) => r.meters > 0 && r.meters < 2.5);
+
+      return wait({
+        totalSales,
+        cashSales,
+        creditSales,
+        totalInvoices: activeInvs.length,
+        voidedInvoices: invs.filter((i) => i.status === 'VOID').length,
+        totalMetersCut: Math.round(totalMeters * 100) / 100,
+        totalOutstandingDebt,
+        totalBolts,
+        totalInventoryMeters: Math.round(totalInventoryMeters * 100) / 100,
+        remnantCount: remnantBolts.length
+      });
+    }
+  },
+  backup: {
+    exportJSON: () => JSON.stringify(db, null, 2),
+    importJSON: (jsonStr: string) => {
+      try {
+        const parsed = JSON.parse(jsonStr);
+        if (parsed && parsed.products && parsed.customers) {
+          localStorage.setItem(KEY, jsonStr);
+          location.reload();
+          return true;
+        }
+        throw new Error('ملف النسخة الاحتياطية غير صالح');
+      } catch (e: unknown) {
+        throw new Error('فشل استيراد النسخة: ' + (e instanceof Error ? e.message : String(e)));
+      }
+    }
   },
   invoices: {
     listToday: () => wait(db.invoices),
