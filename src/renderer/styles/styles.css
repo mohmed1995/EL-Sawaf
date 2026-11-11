@@ -1,0 +1,9 @@
+@import '@fontsource/cairo/400.css';
+@import '@fontsource/cairo/600.css';
+@import '@fontsource/cairo/800.css';
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:focus-visible { outline: 3px solid #C5A059; outline-offset: 2px; }
+@media (prefers-reduced-motion: reduce) { * { transition: none !important; } }

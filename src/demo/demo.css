@@ -1,0 +1,918 @@
+@import url('https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700;800;900&display=swap');
+
+:root {
+  --bg-canvas: #F8F7F4;
+  --bg-card: #FFFFFF;
+  --primary-olive: #113024;
+  --primary-olive-light: #1A3D2F;
+  --primary-olive-dark: #0B2018;
+  --gold-accent: #C5A059;
+  --gold-light: #DFBF7A;
+  --gold-glow: #F3E5C8;
+  --text-charcoal: #1C221F;
+  --text-muted: #6B726C;
+  --border-subtle: #E8E4DC;
+  --border-focus: #C5A059;
+  --danger-crimson: #8C2D19;
+  --danger-bg: #FDEDEC;
+  --success-emerald: #1E6B47;
+  --success-bg: #EAF5EE;
+  --warning-amber: #D9822B;
+  --header-bg: linear-gradient(135deg, #0B2018 0%, #113024 100%);
+}
+
+/* ────────── ثيم الوضع الليلي الفاخر (Royal Obsidian & Gold) ────────── */
+body.dark-mode {
+  --bg-canvas: #0C120E;
+  --bg-card: #141C17;
+  --primary-olive: #162E22;
+  --primary-olive-light: #1F3F30;
+  --primary-olive-dark: #070D09;
+  --gold-accent: #D4AF37;
+  --gold-light: #EAD078;
+  --gold-glow: rgba(212, 175, 55, 0.18);
+  --text-charcoal: #EAECE9;
+  --text-muted: #9EABA3;
+  --border-subtle: #243329;
+  --danger-crimson: #E74C3C;
+  --danger-bg: #2C1210;
+  --success-emerald: #2ECC71;
+  --success-bg: #0E291B;
+  --header-bg: linear-gradient(135deg, #060B08 0%, #101F17 100%);
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  font-family: 'Cairo', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  -webkit-font-smoothing: antialiased;
+}
+
+body {
+  background-color: var(--bg-canvas);
+  color: var(--text-charcoal);
+  height: 100vh;
+  overflow: hidden;
+  user-select: none;
+  transition: background-color 0.25s, color 0.25s;
+}
+
+/* ────────── الهيكل العام للشاشة بنسبة 62% / 38% ────────── */
+.app-container {
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+}
+
+/* ────────── الشريط العلوي النحيف الفاخر ────────── */
+.executive-header {
+  background: var(--header-bg);
+  color: #FFFFFF;
+  height: 56px;
+  padding: 0 18px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border-bottom: 2px solid var(--gold-accent);
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.25);
+  z-index: 20;
+}
+
+.brand-section {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.brand-logo-badge {
+  background: var(--gold-accent);
+  color: #070D09;
+  font-weight: 900;
+  font-size: 17px;
+  padding: 4px 10px;
+  border-radius: 6px;
+  letter-spacing: 0.5px;
+}
+
+.brand-title {
+  font-size: 16px;
+  font-weight: 800;
+  color: #FFFFFF;
+}
+
+.brand-subtitle {
+  font-size: 11px;
+  color: var(--gold-light);
+  font-weight: 500;
+}
+
+.stats-ticker {
+  display: flex;
+  gap: 12px;
+  font-size: 11px;
+  background: rgba(255, 255, 255, 0.06);
+  padding: 4px 12px;
+  border-radius: 20px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.ticker-item b {
+  color: var(--gold-light);
+  margin-right: 4px;
+}
+
+.header-actions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.nav-pill-btn {
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(197, 160, 89, 0.35);
+  color: #FFFFFF;
+  padding: 6px 12px;
+  border-radius: 20px;
+  font-size: 11.5px;
+  font-weight: 700;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  transition: all 0.15s;
+}
+
+.nav-pill-btn:hover {
+  background: var(--gold-accent);
+  color: #070D09;
+  border-color: var(--gold-accent);
+  transform: translateY(-1px);
+}
+
+.nav-pill-btn.gold {
+  background: var(--gold-accent);
+  color: #070D09;
+  border-color: var(--gold-light);
+}
+
+.theme-toggle-btn {
+  background: rgba(255, 255, 255, 0.12);
+  border: 1px solid var(--gold-accent);
+  color: var(--gold-light);
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  font-size: 15px;
+  transition: all 0.2s;
+}
+
+.theme-toggle-btn:hover {
+  transform: rotate(20deg) scale(1.08);
+}
+
+/* ────────── صالة العرض والمبيعات ────────── */
+.workspace-layout {
+  display: flex;
+  flex: 1;
+  height: calc(100vh - 56px - 32px); /* خصم الهيدر وشريط الاختصارات */
+  overflow: hidden;
+}
+
+/* ────────── القسم الأيمن (62%): الكتالوج والقص ────────── */
+.catalog-section {
+  flex: 62;
+  display: flex;
+  flex-direction: column;
+  padding: 14px 18px;
+  overflow: hidden;
+  border-left: 1px solid var(--border-subtle);
+  background: var(--bg-canvas);
+}
+
+.filter-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 12px;
+}
+
+.category-chips {
+  display: flex;
+  gap: 8px;
+  overflow-x: auto;
+  padding-bottom: 2px;
+}
+
+.chip {
+  padding: 6px 14px;
+  background: var(--bg-card);
+  border: 1px solid var(--border-subtle);
+  border-radius: 20px;
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--text-charcoal);
+  cursor: pointer;
+  white-space: nowrap;
+  transition: all 0.15s;
+}
+
+.chip:hover {
+  border-color: var(--gold-accent);
+}
+
+.chip.active {
+  background: var(--primary-olive);
+  color: var(--gold-light);
+  border-color: var(--gold-accent);
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
+}
+
+.search-input-wrap {
+  position: relative;
+  width: 250px;
+}
+
+.search-input-wrap input {
+  width: 100%;
+  padding: 7px 14px;
+  padding-right: 32px;
+  background: var(--bg-card);
+  border: 1.5px solid var(--border-subtle);
+  border-radius: 20px;
+  font-size: 12px;
+  color: var(--text-charcoal);
+  outline: none;
+  transition: border-color 0.2s;
+}
+
+.search-input-wrap input:focus {
+  border-color: var(--gold-accent);
+  box-shadow: 0 0 0 3px var(--gold-glow);
+}
+
+.search-icon {
+  position: absolute;
+  right: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: var(--text-muted);
+  font-size: 13px;
+}
+
+/* ────────── شبكة كروت الأقمشة الفاخرة ────────── */
+.fabrics-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(210px, 1fr));
+  gap: 12px;
+  flex: 1;
+  overflow-y: auto;
+  padding: 4px 2px 10px 2px;
+}
+
+.fabric-card {
+  background: var(--bg-card);
+  border: 1.5px solid var(--border-subtle);
+  border-radius: 12px;
+  padding: 12px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  cursor: pointer;
+  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+  position: relative;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
+}
+
+.fabric-card:hover {
+  transform: translateY(-3px);
+  border-color: var(--gold-accent);
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.1);
+}
+
+.fabric-card.selected {
+  border-color: var(--gold-accent);
+  background: var(--bg-card);
+  box-shadow: 0 0 0 2px var(--gold-accent), 0 8px 22px rgba(0, 0, 0, 0.15);
+}
+
+.card-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 6px;
+}
+
+.swatch-icon {
+  width: 32px;
+  height: 32px;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 15px;
+  background: var(--gold-glow);
+  color: var(--gold-accent);
+  border: 1px solid rgba(197, 160, 89, 0.3);
+}
+
+.category-tag {
+  font-size: 10px;
+  font-weight: 700;
+  padding: 2px 8px;
+  border-radius: 12px;
+  background: rgba(197, 160, 89, 0.15);
+  color: var(--gold-accent);
+}
+
+.fabric-name {
+  font-size: 13.5px;
+  font-weight: 800;
+  color: var(--text-charcoal);
+  margin-bottom: 3px;
+  line-height: 1.35;
+}
+
+.fabric-specs {
+  font-size: 11px;
+  color: var(--text-muted);
+  margin-bottom: 6px;
+}
+
+.stock-indicator {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 11px;
+  font-weight: 600;
+  margin-bottom: 6px;
+}
+
+.stock-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--success-emerald);
+}
+
+.stock-dot.warning {
+  background: var(--warning-amber);
+}
+
+.stock-rolls-list {
+  display: flex;
+  gap: 4px;
+  flex-wrap: wrap;
+  font-size: 10.5px;
+  margin-bottom: 8px;
+}
+
+.roll-badge {
+  background: rgba(0, 0, 0, 0.04);
+  padding: 2px 6px;
+  border-radius: 4px;
+  border: 1px solid var(--border-subtle);
+  font-family: monospace;
+}
+
+body.dark-mode .roll-badge {
+  background: rgba(255, 255, 255, 0.05);
+}
+
+.roll-badge.active-roll {
+  border-color: var(--gold-accent);
+  background: var(--gold-glow);
+  font-weight: bold;
+}
+
+.card-footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  border-top: 1px dashed var(--border-subtle);
+  padding-top: 8px;
+}
+
+.price-unit {
+  font-size: 11px;
+  color: var(--text-muted);
+}
+
+.price-val {
+  font-size: 18px;
+  font-weight: 900;
+  color: var(--gold-accent);
+}
+
+.price-currency {
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--text-muted);
+  margin-right: 2px;
+}
+
+/* ────────── شريط حاسبة القص السريع والميزانية السفلي ────────── */
+.quick-cut-dock {
+  background: var(--bg-card);
+  border: 1.5px solid var(--border-subtle);
+  border-radius: 12px;
+  padding: 10px 14px;
+  margin-top: 10px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+}
+
+.dock-header-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 8px;
+}
+
+.dock-title-text {
+  font-size: 12px;
+  font-weight: 800;
+  color: var(--gold-accent);
+}
+
+.mode-toggle-group {
+  display: flex;
+  background: var(--bg-canvas);
+  border: 1px solid var(--border-subtle);
+  border-radius: 6px;
+  padding: 2px;
+}
+
+.mode-btn {
+  padding: 3px 10px;
+  font-size: 11px;
+  font-weight: 700;
+  border: none;
+  background: transparent;
+  color: var(--text-muted);
+  cursor: pointer;
+  border-radius: 4px;
+}
+
+.mode-btn.active {
+  background: var(--primary-olive);
+  color: var(--gold-light);
+}
+
+.dock-controls {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+.cut-presets {
+  display: flex;
+  gap: 5px;
+  flex-wrap: wrap;
+  flex: 1;
+}
+
+.preset-btn {
+  background: var(--bg-canvas);
+  border: 1px solid var(--border-subtle);
+  color: var(--text-charcoal);
+  padding: 6px 10px;
+  border-radius: 6px;
+  font-size: 11.5px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.15s;
+}
+
+.preset-btn:hover {
+  border-color: var(--gold-accent);
+  background: var(--gold-glow);
+  color: var(--text-charcoal);
+}
+
+.meters-input-box {
+  display: flex;
+  align-items: center;
+  background: var(--bg-card);
+  border: 2px solid var(--gold-accent);
+  border-radius: 8px;
+  overflow: hidden;
+  width: 140px;
+}
+
+.meters-input-box input {
+  width: 100%;
+  border: none;
+  background: transparent;
+  outline: none;
+  font-size: 17px;
+  font-weight: 900;
+  text-align: center;
+  padding: 5px;
+  color: var(--text-charcoal);
+}
+
+.meters-unit-label {
+  background: var(--gold-glow);
+  color: var(--text-charcoal);
+  font-weight: 800;
+  font-size: 11.5px;
+  padding: 6px 8px;
+}
+
+.cut-commit-btn {
+  background: linear-gradient(135deg, var(--gold-accent) 0%, var(--gold-light) 100%);
+  color: #070D09;
+  border: none;
+  padding: 8px 18px;
+  border-radius: 8px;
+  font-size: 13.5px;
+  font-weight: 900;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  box-shadow: 0 2px 6px rgba(197, 160, 89, 0.3);
+  transition: all 0.15s;
+}
+
+.cut-commit-btn:hover {
+  filter: brightness(1.06);
+  transform: translateY(-1px);
+}
+
+/* ────────── القسم الأيسر (38%): السلة والفاتورة الحية ────────── */
+.docket-section {
+  flex: 38;
+  display: flex;
+  flex-direction: column;
+  background: var(--bg-card);
+  border-right: 1px solid var(--border-subtle);
+  overflow: hidden;
+}
+
+.customer-docket-bar {
+  background: var(--bg-canvas);
+  border-bottom: 1px solid var(--border-subtle);
+  padding: 10px 14px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.docket-select-row {
+  display: flex;
+  gap: 6px;
+}
+
+.docket-select {
+  flex: 1;
+  padding: 7px 10px;
+  font-size: 11.5px;
+  font-weight: 700;
+  border: 1.5px solid var(--border-subtle);
+  border-radius: 6px;
+  background: var(--bg-card);
+  color: var(--text-charcoal);
+  outline: none;
+}
+
+.docket-select:focus {
+  border-color: var(--gold-accent);
+}
+
+.customer-badge-info {
+  display: flex;
+  justify-content: space-between;
+  font-size: 11px;
+  background: var(--bg-card);
+  padding: 5px 8px;
+  border-radius: 6px;
+  border: 1px dashed var(--border-subtle);
+}
+
+.debt-alert {
+  color: var(--danger-crimson);
+  font-weight: 800;
+}
+
+/* ────────── جدول بنود الفاتورة الحية ────────── */
+.docket-lines {
+  flex: 1;
+  overflow-y: auto;
+  padding: 10px 14px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.empty-docket {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+  color: var(--text-muted);
+  font-size: 13px;
+  gap: 6px;
+}
+
+.line-item-card {
+  background: var(--bg-canvas);
+  border: 1px solid var(--border-subtle);
+  border-radius: 8px;
+  padding: 8px 10px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  transition: all 0.15s;
+}
+
+.line-item-card:hover {
+  border-color: var(--gold-accent);
+}
+
+.line-info {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.line-name {
+  font-size: 12.5px;
+  font-weight: 800;
+  color: var(--text-charcoal);
+}
+
+.line-meta {
+  font-size: 10.5px;
+  color: var(--text-muted);
+  display: flex;
+  gap: 6px;
+}
+
+.line-formula {
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--gold-accent);
+  font-family: monospace;
+}
+
+.line-pricing {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.line-total-amount {
+  font-size: 15px;
+  font-weight: 900;
+  color: var(--gold-accent);
+}
+
+.line-del-btn {
+  background: transparent;
+  color: var(--danger-crimson);
+  border: none;
+  font-size: 13px;
+  cursor: pointer;
+  padding: 2px 4px;
+  border-radius: 4px;
+}
+
+.line-del-btn:hover {
+  background: var(--danger-bg);
+}
+
+/* ────────── تنبيه إنهاء التوب Bolt-Buster ────────── */
+.bolt-buster-banner {
+  background: #FFF9E6;
+  border: 1.5px solid var(--gold-accent);
+  border-radius: 8px;
+  padding: 8px 12px;
+  margin: 0 14px 8px 14px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 8px;
+}
+
+body.dark-mode .bolt-buster-banner {
+  background: #241D08;
+}
+
+.banner-text {
+  font-size: 11px;
+  font-weight: 700;
+  color: #B7950B;
+  line-height: 1.35;
+}
+
+.banner-accept-btn {
+  background: var(--gold-accent);
+  color: #070D09;
+  font-weight: 800;
+  border: none;
+  padding: 4px 10px;
+  border-radius: 6px;
+  font-size: 11px;
+  cursor: pointer;
+  white-space: nowrap;
+}
+
+/* ────────── صندوق الإجماليات وأزرار الدفع ────────── */
+.docket-summary {
+  background: var(--primary-olive-dark);
+  color: #FFFFFF;
+  padding: 14px 16px;
+  border-top: 2px solid var(--gold-accent);
+}
+
+.summary-rows {
+  display: flex;
+  justify-content: space-between;
+  font-size: 11.5px;
+  color: rgba(255, 255, 255, 0.7);
+  margin-bottom: 4px;
+}
+
+.grand-total-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  margin-top: 6px;
+  padding-top: 6px;
+  border-top: 1px dashed rgba(197, 160, 89, 0.4);
+}
+
+.grand-label {
+  font-size: 14px;
+  font-weight: 800;
+  color: #FFFFFF;
+}
+
+.grand-number {
+  font-size: 28px;
+  font-weight: 900;
+  color: var(--gold-light);
+  letter-spacing: 0.5px;
+  font-family: monospace;
+}
+
+.grand-currency {
+  font-size: 13px;
+  color: var(--gold-accent);
+  margin-right: 3px;
+}
+
+.payment-actions {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+  margin-top: 10px;
+}
+
+.pay-btn {
+  padding: 12px;
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: 900;
+  cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 2px;
+  transition: all 0.15s;
+  border: none;
+}
+
+.pay-btn.cash {
+  background: linear-gradient(135deg, var(--gold-accent) 0%, var(--gold-light) 100%);
+  color: #070D09;
+  box-shadow: 0 4px 12px rgba(197, 160, 89, 0.3);
+}
+
+.pay-btn.cash:hover {
+  transform: translateY(-2px);
+  filter: brightness(1.05);
+}
+
+.pay-btn.credit {
+  background: rgba(255, 255, 255, 0.1);
+  color: #FFFFFF;
+  border: 1.5px solid rgba(197, 160, 89, 0.5);
+}
+
+.pay-btn.credit:hover {
+  background: rgba(255, 255, 255, 0.18);
+  border-color: var(--gold-accent);
+}
+
+.key-tag {
+  font-size: 10px;
+  opacity: 0.85;
+  font-weight: 600;
+}
+
+/* ────────── شريط مساعدة الاختصارات السريع السفلي ────────── */
+.hotkey-helper-bar {
+  background: var(--primary-olive-dark);
+  color: var(--gold-light);
+  height: 32px;
+  padding: 0 16px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-size: 11px;
+  font-weight: 700;
+  border-top: 1px solid rgba(197, 160, 89, 0.25);
+  overflow-x: auto;
+}
+
+.hotkey-tag {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  white-space: nowrap;
+}
+
+.hotkey-tag kbd {
+  background: rgba(255, 255, 255, 0.15);
+  border: 1px solid rgba(197, 160, 89, 0.4);
+  color: #FFFFFF;
+  padding: 1px 5px;
+  border-radius: 3px;
+  font-family: monospace;
+}
+
+/* ────────── شريط الائتمان القبلي وتفاصيل العميل الفاخرة ────────── */
+.tribal-credit-container {
+  background: rgba(0, 0, 0, 0.05);
+  border: 1px solid var(--border-subtle);
+  border-radius: 8px;
+  padding: 8px 10px;
+  margin-top: 8px;
+}
+
+body.dark-mode .tribal-credit-container {
+  background: rgba(255, 255, 255, 0.03);
+  border-color: rgba(255, 255, 255, 0.08);
+}
+
+.credit-progress-bar-bg {
+  height: 6px;
+  background: rgba(0, 0, 0, 0.1);
+  border-radius: 3px;
+  overflow: hidden;
+  margin: 6px 0 4px 0;
+}
+
+body.dark-mode .credit-progress-bar-bg {
+  background: rgba(255, 255, 255, 0.1);
+}
+
+.credit-progress-bar-fill {
+  height: 100%;
+  border-radius: 3px;
+  background: var(--gold-accent);
+  transition: width 0.3s ease;
+}
+
+.credit-progress-bar-fill.danger {
+  background: var(--danger-crimson);
+}
+
+.swatch-color-preview {
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  border: 2px solid #FFFFFF;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.25);
+  flex-shrink: 0;
+}
+
+.budget-calc-banner {
+  background: var(--gold-glow);
+  border: 1px solid var(--gold-accent);
+  border-radius: 6px;
+  padding: 6px 10px;
+  font-size: 11.5px;
+  color: #5D4037;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-top: 6px;
+}
+
+body.dark-mode .budget-calc-banner {
+  background: #231C08;
+  color: #F9E79F;
+}
+

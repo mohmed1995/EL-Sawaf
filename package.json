@@ -1,0 +1,26 @@
+{
+  "name": "alsawaf-fabrics-pos",
+  "version": "1.0.0",
+  "description": "منظومة الصواف للأقمشة — نظام كاشير ومخازن الأتواب وحسابات الآجل (صعيد مصر)",
+  "type": "module",
+  "main": "dist/main/index.js",
+  "scripts": {
+    "dev": "vite",
+    "build": "tsc",
+    "test": "node --test dist/**/*.test.js",
+    "typecheck": "tsc --noEmit"
+  },
+  "keywords": ["textile", "pos", "fabric", "alsawaf", "offline-first"],
+  "author": "Al-Sawaf Fabrics",
+  "license": "ISC",
+  "devDependencies": {
+    "@types/node": "^20.12.0",
+    "@types/react": "^18.3.18",
+    "@types/react-dom": "^18.3.5",
+    "@vitejs/plugin-react": "^4.3.4",
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1",
+    "typescript": "^5.4.0",
+    "vite": "^5.4.11"
+  }
+}
